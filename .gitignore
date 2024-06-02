@@ -7,3 +7,4 @@
 /streaming
 .env
 docker/dev/phpmyadmin/ca-certificate.crt
+docker/prod/phpmyadmin/ca-certificate.crt
