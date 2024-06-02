@@ -1,0 +1,14 @@
+[submodule "oncafe-site-backend"]
+	path = oncafe-site-backend
+	url = https://github.com/harissonmatos/oncafe-site-backend
+	branch = master
+
+[submodule "oncafe-site-frontend"]
+	path = oncafe-site-frontend
+	url = https://github.com/harissonmatos/oncafe-site-frontend
+	branch = master
+
+[submodule "streaming"]
+	path = streaming
+	url = https://github.com/harissonmatos/streaming
+	branch = master

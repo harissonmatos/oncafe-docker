@@ -1,0 +1,12 @@
+version: '3.2'
+
+services:
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - ./docker/dev/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+      - ./docker/dev/phpmyadmin/ca-certificate.crt:/etc/phpmyadmin/ca-certificate.crt

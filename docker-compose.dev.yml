@@ -1,0 +1,80 @@
+version: '3.2'
+
+services:
+
+  database:
+    image: mariadb:10.1.48
+    restart: always
+    hostname: database
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD:
+
+  backend:
+    image: node:12.22.4-alpine
+    ports:
+      - "3001:3001"
+    depends_on:
+      - database
+    volumes:
+      - ./oncafe-site-backend:/app
+    working_dir: /app
+    command: >
+      /bin/sh -c "
+      yarn &&
+      npx sequelize-cli db:create &&
+      npx sequelize-cli db:migrate &&
+      npx sequelize-cli db:seed:all &&
+      yarn dev
+      "
+
+  dev-payment-verify:
+    image: node:12.22.4-alpine
+    depends_on:
+      - database
+    volumes:
+      - ./oncafe-site-backend:/app
+    working_dir: /app
+    command: >
+      /bin/sh -c "
+      yarn &&
+      npx sequelize-cli db:create &&
+      npx sequelize-cli db:migrate &&
+      npx sequelize-cli db:seed:all &&
+      yarn dev-payment-verify
+      "
+
+  frontend:
+    image: node:12.22.4-alpine
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./oncafe-site-frontend:/var/www/oncafe-site-frontend
+    working_dir: /var/www/oncafe-site-frontend
+    stdin_open: true
+    command: >
+      /bin/sh -c "
+      yarn &&
+      yarn start
+      "
+
+  streaming:
+    image: node:12.22.4-alpine
+    deploy:
+      resources:
+        limits:
+          memory: 8g
+        reservations:
+          memory: 4g
+    working_dir: /app
+    ports:
+      - "8000:8000"
+      - "1935:1935"
+    volumes:
+      - ./streaming:/app
+    command: "/bin/sh -c 'apk add ffmpeg && node app.js'"

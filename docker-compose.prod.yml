@@ -1,0 +1,56 @@
+version: '3.2'
+
+services:
+
+  backend:
+    image: oncafe/backend
+    build:
+      context: .
+      dockerfile: ./docker/prod/backend/Dockerfile
+    depends_on:
+      - database
+    networks:
+      - oncafe
+
+  cli:
+    image: oncafe/cli
+    build:
+      context: .
+      dockerfile: ./docker/prod/cli/Dockerfile
+    depends_on:
+      - backend
+    networks:
+      - oncafe
+
+  streaming:
+    image: oncafe/streaming
+    build:
+      context: .
+      dockerfile: ./docker/prod/streaming/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 8g
+        reservations:
+          memory: 4g
+    ports:
+#      - "8000:8000"
+      - "1935:1935"
+    networks:
+      - oncafe
+
+  nginx:
+    image: oncafe/nginx
+    build:
+      context: .
+      dockerfile: ./docker/prod/nginx/Dockerfile
+    depends_on:
+      - backend
+      - streaming
+    ports:
+      - "80:80"
+    networks:
+      - oncafe
+
+networks:
+  oncafe:
