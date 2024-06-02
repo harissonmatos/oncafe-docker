@@ -1,10 +1,4 @@
 /.idea
-/oncafe-dde-test
-/oncafe-fechamento-mobile-front
-/oncafe-site-backend
-/oncafe-site-frontend
-/oncafe-streaming-server
-/streaming
 .env
 docker/dev/phpmyadmin/ca-certificate.crt
 docker/prod/phpmyadmin/ca-certificate.crt
